@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -37,11 +39,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         Product product = productList.get(position);
 
+     //   holder.textviewid.setText(String.valueOf(product.getId()));
         holder.textViewname.setText(product.getName());
         holder.textViewdescription.setText(product.getDescription());
         holder.textViewprice.setText(String.valueOf(product.getPrice()));
 
         Glide.with(mtx).load(product.getImgurl()).into(holder.imageView);
+
     }
 
     @Override
@@ -51,16 +55,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public class ProductViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView textViewname,textViewdescription, textViewprice;
+        public TextView  textviewid, textViewname, textViewdescription, textViewprice;
         public ImageView imageView;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
 
-            itemView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.imageView);
+         //   textviewid = itemView.findViewById(R.id.id);
             textViewname = itemView.findViewById(R.id.name);
             textViewdescription = itemView.findViewById(R.id.description);
             textViewprice = itemView.findViewById(R.id.price);
+
         }
     }
 
