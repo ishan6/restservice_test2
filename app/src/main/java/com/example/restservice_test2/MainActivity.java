@@ -26,13 +26,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ProductAdapter.OnItemClickListner {
 
-     private static final String URL_DATA = "http://192.168.42.116:8080/demo/all";
+    private static final String URL_DATA = "http://192.168.42.212:8080/demo/all";
 
     RecyclerView recyclerView;
     ProductAdapter adapter;
 
     List<Product> productslist;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +54,6 @@ public class MainActivity extends AppCompatActivity implements ProductAdapter.On
         progressDialog.setMessage("Loading Data From Server...");
         progressDialog.show();
 
-
-
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_DATA, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -78,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements ProductAdapter.On
                         productslist.add(product);
 
                     }
-
-
 
                     adapter = new ProductAdapter(MainActivity.this, productslist);
                     recyclerView.setAdapter(adapter);
