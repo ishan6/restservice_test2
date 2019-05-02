@@ -1,6 +1,7 @@
 package com.example.restservice_test2;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,9 +24,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ProductAdapter.OnItemClickListner {
 
-    private static final String URL_DATA = "http://192.168.42.252:8080/demo/all";
+     private static final String URL_DATA = "http://192.168.42.116:8080/demo/all";
+
     RecyclerView recyclerView;
     ProductAdapter adapter;
 
@@ -43,12 +45,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-
         loadRecyclerviewData();
 
     }
-
 
 
     private void loadRecyclerviewData(){
@@ -84,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
                     adapter = new ProductAdapter(MainActivity.this, productslist);
                     recyclerView.setAdapter(adapter);
+                    adapter.setOnItemCliclListener(MainActivity.this);
 
                  //   progressDialog.dismiss();
 
@@ -101,5 +101,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent detailintent = new Intent(this, DetailActivity.class);
+        Product clickItem = productslist.get(position);
+
+        detailintent.putExtra("NAME", clickItem.getName());
+        detailintent.putExtra("DETAILS", clickItem.getDescription());
+        detailintent.putExtra("PRICE", clickItem.getPrice());
+        detailintent.putExtra("IMG", clickItem.getImgurl());
+
+        startActivity(detailintent);
     }
 }

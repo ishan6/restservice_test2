@@ -17,10 +17,17 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-
-
     private Context mtx;
     private List<Product> productList;
+    private OnItemClickListner mListner;
+
+    public interface OnItemClickListner{
+        void  onItemClick(int position);
+    }
+
+    public void setOnItemCliclListener(OnItemClickListner listener){
+        mListner = listener;
+    }
 
     public ProductAdapter(Context mtx, List<Product> productList) {
         this.mtx = mtx;
@@ -39,12 +46,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         Product product = productList.get(position);
 
-     //   holder.textviewid.setText(String.valueOf(product.getId()));
-        holder.textViewname.setText(product.getName());
-        holder.textViewdescription.setText(product.getDescription());
-        holder.textViewprice.setText(String.valueOf(product.getPrice()));
+        String PizzaName = product.getName();
+        Double PizzaPrice = product.getPrice();
+        String PizzaDescription = product.getDescription();
+        String PizzaImage = product.getImgurl();
 
-        Glide.with(mtx).load(product.getImgurl()).into(holder.imageView);
+     //   holder.textviewid.setText(String.valueOf(product.getId()));
+
+     //   holder.textViewname.setText(product.getName());
+     //   holder.textViewdescription.setText(product.getDescription());
+     //   holder.textViewprice.setText(String.valueOf(product.getPrice()));
+
+     //   Glide.with(mtx).load(product.getImgurl()).into(holder.imageView);
+
+        holder.textViewname.setText(PizzaName);
+        holder.textViewprice.setText(String.valueOf("Rs."+PizzaPrice));
+        holder.textViewdescription.setText(PizzaDescription);
+
+        Glide.with(mtx).load(PizzaImage).into(holder.imageView);
 
     }
 
@@ -67,6 +86,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             textViewdescription = itemView.findViewById(R.id.description);
             textViewprice = itemView.findViewById(R.id.price);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListner != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            mListner.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
