@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ProductAdapter.OnItemClickListner {
 
-    private static final String URL_DATA = "http://192.168.42.49:8080/demo/all";
+    private static final String URL_DATA = "http://192.168.42.125:8080/demo/all";
 
     RecyclerView recyclerView;
     ProductAdapter adapter;
@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements ProductAdapter.On
                         String description = productobject.getString("description");
                         Double price = productobject.getDouble("price");
                         String imageurl = productobject.getString("imageUrl");
+                        Double medium_price = productobject.getDouble("medium_price");
+                        Double large_price = productobject.getDouble("liarge_price");
 
-                        Product product = new Product(id, name, description, price, imageurl);
+                        Product product = new Product(id, name, description, price, imageurl, medium_price, large_price);
                         productslist.add(product);
 
                     }
@@ -107,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements ProductAdapter.On
         detailintent.putExtra("DETAILS", clickItem.getDescription());
         detailintent.putExtra("PRICE", clickItem.getPrice());
         detailintent.putExtra("IMG", clickItem.getImgurl());
+        detailintent.putExtra("PIZZA_LARGE", clickItem.getLarge_price());
+        detailintent.putExtra("PIZZA_MEDIUM", clickItem.getMedium_price());
 
         startActivity(detailintent);
     }
