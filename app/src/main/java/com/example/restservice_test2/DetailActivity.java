@@ -1,11 +1,13 @@
 package com.example.restservice_test2;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.util.EventLogTags;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,15 +16,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 
 public class DetailActivity extends AppCompatActivity {
 
+
     CardView small, medium, large;
     TextView pizzaname, pizzaprice, pizzadescription, smallpizza, largepizza, mediumpizza, allprice1, itemcount, minplus;
     ImageView pizzaimage;
-    Button plus, minus;
+    Button plus, minus, addtoCart;
     CheckBox addcheese;
 
     //check additional cheese
@@ -35,11 +42,17 @@ public class DetailActivity extends AppCompatActivity {
     int qty = 1;
 
 
+     String Pizzaname1;
+     String PizzaDescription1;
+     String Imageurl;
+     Double Allprice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+
 
         pizzaname = (TextView) findViewById(R.id.name);
         smallpizza = (TextView) findViewById(R.id.smallpizzza);
@@ -59,6 +72,8 @@ public class DetailActivity extends AppCompatActivity {
 
         plus = (Button) findViewById(R.id.plus);
         minus = (Button) findViewById(R.id.minus);
+        addtoCart = (Button) findViewById(R.id.addToCart);
+
 
         addcheese = (CheckBox) findViewById(R.id.addcheese);
 
@@ -70,14 +85,21 @@ public class DetailActivity extends AppCompatActivity {
         final Double pizzaprice1 = intent.getDoubleExtra("PRICE",0.00);
         final Double pizzaprice3 = intent.getDoubleExtra("PIZZA_LARGE",0.00);
         final Double pizzaprice2 = intent.getDoubleExtra("PIZZA_MEDIUM",0.00);
+        final String pizzaname1 = intent.getStringExtra("NAME");
+        final String pizzadescription1 = intent.getStringExtra("DETAILS");
 
         final Double pizzawithCheese1 = pizzaprice1+160;
         final Double pizzawithCheese2 = pizzaprice2+160;
         final Double pizzawithCheese3 = pizzaprice3+160;
 
+        Imageurl = imgurl;
+        PizzaDescription1 = pizzadescription1;
+        Pizzaname1 = pizzaname1;
+
+
         Glide.with(DetailActivity.this).load(imgurl).into(pizzaimage);
-        pizzaname.setText(getIntent().getStringExtra("NAME"));
-        pizzadescription.setText(getIntent().getStringExtra("DETAILS"));
+        pizzaname.setText(pizzaname1);
+        pizzadescription.setText(pizzadescription1);
         pizzaprice.setText("Rs." + pizzaprice1);
 
         allprice1.setText("Rs. " + pizzaprice1);
@@ -99,17 +121,20 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzawithCheese11 = pizzawithCheese1 * qty;
                         allprice1.setText("Rs." + pizzawithCheese11);
                         pizzaprice.setText("Rs." + pizzawithCheese11);
+                        Allprice = pizzawithCheese11;
                         is_checkbox_Checked_or_not = true;
 
                     }else if(selected_pizza_type == 2){
                         Double pizzawithCheese22 = pizzawithCheese2 * qty;
                         allprice1.setText("Rs." + pizzawithCheese22);
                         pizzaprice.setText("Rs." + pizzawithCheese22);
+                        Allprice = pizzawithCheese22;
                         is_checkbox_Checked_or_not = true;
                     }else if(selected_pizza_type == 3){
                         Double pizzawithCheese33 = pizzawithCheese3 * qty;
                         allprice1.setText("Rs." + pizzawithCheese33);
                         pizzaprice.setText("Rs." + pizzawithCheese33);
+                        Allprice = pizzawithCheese33;
                         is_checkbox_Checked_or_not = true;
                     }
                 }else{
@@ -117,18 +142,21 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzaprice11 = pizzaprice1 * qty;
                         allprice1.setText("Rs." + pizzaprice11);
                         pizzaprice.setText("Rs." + pizzaprice11);
+                        Allprice = pizzaprice11;
                         is_checkbox_Checked_or_not = false;
 
                     }else if(selected_pizza_type == 2){
                         Double pizzaprice22 = pizzaprice2 * qty;
                         allprice1.setText("Rs." + pizzaprice22);
                         pizzaprice.setText("Rs." + pizzaprice22);
+                        Allprice = pizzaprice22;
                         is_checkbox_Checked_or_not = false;
 
                     }else if(selected_pizza_type == 3){
                         Double pizzaprice33 = pizzaprice3 * qty;
                         allprice1.setText("Rs." + pizzaprice33);
                         pizzaprice.setText("Rs." + pizzaprice33);
+                        Allprice = pizzaprice33;
                         is_checkbox_Checked_or_not = false;
                     }
                 }
@@ -242,12 +270,14 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzawithCheese11 = pizzawithCheese1 * qty;
                         allprice1.setText("Rs." + pizzawithCheese11);
                         pizzaprice.setText("Rs." + pizzawithCheese11);
+                        Allprice = pizzawithCheese11;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }else{
                         Double pizzaprice11 = pizzaprice1 * qty;
                         allprice1.setText("Rs." + pizzaprice11);
                         pizzaprice.setText("Rs." + pizzaprice11);
+                        Allprice = pizzaprice11;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }
@@ -258,12 +288,14 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzawithCheese22 = pizzawithCheese2 * qty;
                         allprice1.setText("Rs." + pizzawithCheese22);
                         pizzaprice.setText("Rs." + pizzawithCheese22);
+                        Allprice = pizzawithCheese22;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }else{
                         Double pizzaprice22 = pizzaprice2 * qty;
                         allprice1.setText("Rs." + pizzaprice22);
                         pizzaprice.setText("Rs." + pizzaprice22);
+                        Allprice = pizzaprice22;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }
@@ -274,16 +306,19 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzawithCheese33 = pizzawithCheese3 * qty;
                         allprice1.setText("Rs." + pizzawithCheese33);
                         pizzaprice.setText("Rs." + pizzawithCheese33);
+                        Allprice = pizzawithCheese33;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }else{
                         Double pizzaprice33 = pizzaprice3 * qty;
                         allprice1.setText("Rs." + pizzaprice33);
                         pizzaprice.setText("Rs." + pizzaprice33);
+                        Allprice = pizzaprice33;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }
                 }
+
             }
         });
 
@@ -304,12 +339,14 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzawithCheese11 = pizzawithCheese1 * qty;
                         allprice1.setText("Rs." + pizzawithCheese11);
                         pizzaprice.setText("Rs." + pizzawithCheese11);
+                        Allprice = pizzawithCheese11;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }else{
                         Double pizzaprice11 = pizzaprice1 * qty;
                         allprice1.setText("Rs." + pizzaprice11);
                         pizzaprice.setText("Rs." + pizzaprice11);
+                        Allprice = pizzaprice11;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }
@@ -320,12 +357,14 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzawithCheese22 = pizzawithCheese2 * qty;
                         allprice1.setText("Rs." + pizzawithCheese22);
                         pizzaprice.setText("Rs." + pizzawithCheese22);
+                        Allprice = pizzawithCheese22;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }else{
                         Double pizzaprice22 = pizzaprice2 * qty;
                         allprice1.setText("Rs." + pizzaprice22);
                         pizzaprice.setText("Rs." + pizzaprice22);
+                        Allprice = pizzaprice22;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }
@@ -336,17 +375,39 @@ public class DetailActivity extends AppCompatActivity {
                         Double pizzawithCheese33 = pizzawithCheese3 * qty;
                         allprice1.setText("Rs." + pizzawithCheese33);
                         pizzaprice.setText("Rs." + pizzawithCheese33);
+                        Allprice = pizzawithCheese33;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }else{
                         Double pizzaprice33 = pizzaprice3 * qty;
                         allprice1.setText("Rs." + pizzaprice33);
                         pizzaprice.setText("Rs." + pizzaprice33);
+                        Allprice = pizzaprice33;
                         itemcount.setText(qty + " Items");
                         minplus.setText(qty + "");
                     }
                 }
             }
         });
+
+        addtoCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                        addTocart();
+            }
+        });
     }
+
+    public void addTocart(){
+
+        Intent cartdetails = new Intent(this, SignUpActivity.class);
+/*
+        cartdetails.putExtra("NAME", Pizzaname1);
+        cartdetails.putExtra("DETAILS", PizzaDescription1);
+        cartdetails.putExtra("PRICE", Allprice);
+        cartdetails.putExtra("IMG", Imageurl);
+*/
+        startActivity(cartdetails);
+    }
+
 }
